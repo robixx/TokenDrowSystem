@@ -16,5 +16,6 @@ namespace TricketBookingSystem.Models
         public int? TotalTricket { get; set; }
 
         public int? IsActive { get; set; }
+        public int? TokenDistance { get; set; }
     }
 }

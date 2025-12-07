@@ -83,7 +83,7 @@ namespace TricketBookingSystem.Controllers
                 await _connection.Users.AddAsync(user);
                 await _connection.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Registration successful! You can now login.";
-                return RedirectToAction("Index");
+                return RedirectToAction("TokenBooking","TokenBook");
             }
 
             return View(model);
