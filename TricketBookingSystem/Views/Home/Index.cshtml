@@ -1,0 +1,126 @@
+﻿
+
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    var totalTickets = ViewBag.TotalTickets as int? ?? 0;
+    var bookedTokens = ViewBag.BookedTokens as List<dynamic> ?? new List<dynamic>();
+    var currentUserId = ViewBag.CurrentUserId as int? ?? 0;
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        <h4 class="text-center">Token Booking</h4><hr />
+        <div class="numbers-display" id="numbersDisplay">
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <div class="info-box">
+            <h5 id="totalSelected">Total Selected: 0</h5>
+            <h5>Selected Token List:</h5>
+            <div id="selectedList" class="selected-list-box"></div>
+        </div>
+        <div class="d-grid mt-4">
+            <button id="confirmSelectionBtn" class="btn btn-success btn-sm fw-bold" type="button">Confirm Selection</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    var currentUserId = @ViewBag.CurrentUserId;
+    var bookedTokens = @Html.Raw(Json.Serialize(ViewBag.BookedTokens));
+    var totalTickets = @ViewBag.TotalTickets;
+   
+    const numbersDisplay = document.getElementById('numbersDisplay');
+    const totalSelected = document.getElementById('totalSelected');
+    const selectedList = document.getElementById('selectedList');
+
+    let selectedNumbers = [];
+
+    function handleBoxClick(box) {
+        if (!isLoggedIn) { showLoginModal(); return; }
+        if (box.classList.contains('disabled') && !box.classList.contains('booked')) return;
+
+        box.classList.toggle('booked');
+        const num = parseInt(box.dataset.number);
+
+        if (box.classList.contains('booked')) {
+            if (!selectedNumbers.includes(num)) selectedNumbers.push(num);
+        } else {
+            selectedNumbers = selectedNumbers.filter(x => x !== num);
+        }
+
+        renderSelectedList();
+    }
+
+    function renderSelectedList() {
+        totalSelected.textContent = "Total Selected: " + selectedNumbers.length;
+        selectedList.innerHTML = "";
+        selectedNumbers.forEach(n => {
+            const div = document.createElement("div");
+            div.className = "selected-item";
+            div.textContent = n;
+            selectedList.appendChild(div);
+        });
+    }
+
+    function createNumbersDisplay() {
+        numbersDisplay.innerHTML = '';
+        for (let i = 1; i <= totalTickets; i++) {
+            let box = document.createElement('div');
+            box.className = 'number-box m-1 p-2 border text-center';           
+            box.innerText = String(i).padStart(2, '0');
+            box.dataset.number = i;
+
+            let booked = bookedTokens.find(t => t.tokenNumber === i);
+             debugger;
+            if (booked) {
+                if (booked.userId == currentUserId) {
+                    box.classList.add('booked');
+                    selectedNumbers.push(i);
+                } else {
+                    box.classList.add('disabled');
+                }
+            }
+
+            box.setAttribute('onclick', 'handleBoxClick(this)');
+            numbersDisplay.appendChild(box);
+        }
+
+        renderSelectedList();
+    }
+
+    createNumbersDisplay();
+
+    document.getElementById('confirmSelectionBtn').setAttribute('onclick', `
+        if (!isLoggedIn) { showLoginModal(); return; }
+        if (selectedNumbers.length == 0) { alert("Select at least one token!"); return; }
+
+        fetch('/Home/SaveSelectedTokens', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Tokens: selectedNumbers })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert("Tokens confirmed: " + data.bookedTokens.join(', '));
+                location.reload();
+            } else {
+                alert(data.message || "Something went wrong!");
+            }
+        });
+    `);
+</script>

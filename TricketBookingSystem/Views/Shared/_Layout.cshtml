@@ -1,0 +1,232 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using System.Security.Claims
+
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated ? "true" : "false";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ticket DrawSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TricketBookingSystem.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ticket Draw</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TokenDrow" asp-action="History">Booking history</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TokenDrow" asp-action="Index">Drow</a>
+                            </li>
+                        }
+                       
+                    </ul>
+                    <div class="d-flex">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span class="navbar-text me-2">Hello, @User.Identity.Name</span>
+                            <form asp-controller="Home" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button id="loginNavBtn" class="btn btn-success btn-sm" onclick="showLoginModal()">Login</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year - Ticket Draw - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+
+    <!-- Global Modal -->
+    <div class="modal fade" id="globalLoginModal" tabindex="-1" aria-labelledby="globalLoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-top">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="globalLoginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" id="globalLoginModalBody">
+                    <!-- Default Login Form -->
+                    <form method="post" asp-controller="Home" asp-action="Login">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">MobileNumber</label>
+                            <input type="text" name="MobileNumber" class="form-control" id="MobileNumber" placeholder="Enter username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name="Password" class="form-control" id="Password" placeholder="Enter password">
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-success" id="globalLoginBtn">Login</button>
+                        </div>
+                        <div class="text-center">
+                            <a href="/Home/Register">Click here to Register</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+   
+
+    <script>
+        var isLoggedIn = @isAuthenticated
+
+        function showLoginModal() {
+            const modalBody = document.getElementById("globalLoginModalBody");
+            modalBody.innerHTML = `
+                <form id="globalLoginForm" method="post" asp-controller="Home" asp-action="Login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">MobileNumber</label>
+                            <input type="text" class="form-control" name="MobileNumber" id="MobileNumber" placeholder="Enter MobileNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                            <input type="password" name="Password" class="form-control" id="Password" placeholder="Enter password">
+                    </div>
+                    <div class="d-grid mb-2">
+                        <button type="submit" class="btn btn-success" id="globalLoginBtn">Login</button>
+                    </div>
+                    <div class="text-center">
+                         <a href="/Home/Register">Click here to Register</a>
+                    </div>
+                </form>
+            `;
+            const modalEl = document.getElementById("globalLoginModal");
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+           
+        }
+
+        function showRegisterForm() {
+            const modalBody = document.getElementById("globalLoginModalBody");
+            modalBody.innerHTML = `
+                <form id="globalRegisterForm">
+                    <div class="mb-3">
+                        <label for="regUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="regUsername" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="Enter email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="regPassword" placeholder="Enter password">
+                    </div>
+                    <div class="d-grid mb-2">
+                        <button type="button" class="btn btn-success" onclick="registerUser()">Register</button>
+                    </div>
+                    <div class="text-center">
+                        <a href="javascript:void(0)" onclick="showLoginModal()">Back to Login</a>
+                    </div>
+                </form>
+            `;
+        }
+
+        
+
+        function registerUser() {
+            const username = document.getElementById("regUsername").value.trim();
+            const email = document.getElementById("regEmail").value.trim();
+            const password = document.getElementById("regPassword").value.trim();
+
+            if (username && email && password) {
+                alert("Registration successful! Please login.");
+                showLoginModal();
+            } else {
+                alert("Please fill all fields!");
+            }
+        }
+
+    $(document).on('submit', '#globalLoginForm', function(e) {
+            e.preventDefault(); // prevent normal submit
+             const username = $('#MobileNumber').val();
+             const password = $('#Password').val();
+            debugger;
+            $.ajax({
+                url: '/Home/Login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ MobileNumber: username, Password: password }),
+                success: function(data) {
+                    if (data.success) {
+                        
+
+                        // Update navbar dynamically
+                        const navDiv = $('#loginNavBtn').parent();
+                        navDiv.html(`
+                            <span class="navbar-text me-2">Hello, ${data.username}</span>
+                            <form method="post" action="/Home/Logout" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                            </form>
+                        `);
+
+                        // Close modal
+                        var modalEl = document.getElementById('globalLoginModal');
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        modal.hide();
+                            
+                        isLoggedIn=true;
+                        window.location.reload();
+                    } else {
+                        alert(data.message || "Login failed!");
+                    }
+                },
+                error: function() {
+                    alert("Something went wrong!");
+                }
+            });
+        });
+    </script>
+
+
+
+   
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

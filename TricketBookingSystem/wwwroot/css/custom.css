@@ -1,0 +1,119 @@
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(rgb(101 162 107 / 60%), rgba(248, 249, 250, 1.6)), url(/img/img.jpg) center / cover no-repeat;
+    background-attachment: fixed; /* optional: keeps image fixed on scroll */
+    margin: 0;
+    padding: 0;
+}
+
+.text-custom {
+    color: #9c050d;
+}
+.btn-custom {
+    background-color: #0b4f0f;
+    color:white;
+    cursor:pointer;
+}
+.btn-custom:hover {
+    background-color: #0b4f0f;
+    color: white;
+}
+
+.result-box {
+    /* Key Change: Fixed width to simulate a limited digital screen for ONE digit */
+    width: 220px;
+    height: 240px;
+    /* Slightly taller */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace, 'Courier New', Courier;
+    font-size: 10rem;
+    /* Large font to show a single digit clearly */
+    font-weight: 900;
+    /* Dark, matte background */
+    background-color: #d6d5d5;
+    color: #18620c;
+    /* Bright red/orange for the "lit" number */
+
+    border-radius: 8px;
+    border: 3px solid #d6d5d5;
+    box-shadow: 0 0 5px rgba(255, 51, 51, 0.5), 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease-in-out;
+    margin: 0 5px;
+    /* Smaller space between the two boxes */
+}
+
+/* Keyframes for the Spinning Animation */
+@keyframes spinAndFade {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-30px);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Class added during the draw animation */
+.drawing {
+    animation: spinAndFade 0.1s infinite linear;
+    /* Faster animation */
+}
+
+/* Highlight winner states */
+.winner-final {
+    color: #062606;
+    /* Bright green for the final winner */
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    animation: pulse 1s ease-in-out 3;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+    /* Smaller pulse to fit the style */
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Token List Styling (Remains the same) */
+.token-list {
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.token-item {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+    .token-item.winning-token {
+        background: linear-gradient(45deg, rgba(0, 255, 0, 0.9), rgba(0, 150, 0, 0.7));
+        color: white;
+        border: 2px solid #00ff00;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        transform: scale(1.1);
+    }

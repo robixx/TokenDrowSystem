@@ -1,0 +1,63 @@
+﻿
+@model TricketBookingSystem.Models.RegisterDto
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .register-card {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .register-card h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #198754;
+        }
+
+    .btn-register {
+        background-color: #198754;
+        color: white;
+    }
+
+        .btn-register:hover {
+            background-color: #198754;
+        }
+</style>
+
+<div class="register-card">
+    <h2>Create Account</h2>
+    <form asp-controller="Home" asp-action="Register" method="post">
+        <div class="mb-3">
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" placeholder="Enter your full name">
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MobileNumber" class="form-label"></label>
+            <input asp-for="MobileNumber" class="form-control" placeholder="Enter mobile number">
+            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" placeholder="Enter password">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-success">Register</button>
+        </div>
+    </form>
+</div>

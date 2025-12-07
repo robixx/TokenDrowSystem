@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "ToKen Drow";
+    var availableTokens = ViewBag.AvailableTokens as List<int> ?? new List<int>();
+    var bookedTokens = ViewBag.BookedTokens as List<int> ?? new List<int>();
+}
+<link href="~/css/custom.css" rel="stylesheet" />
+
+
+
+
+<div class=" py-5">
+    <h1 class="text-center mb-4 fw-bold text-custom">Token Draw</h1>
+   
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div id="resultBoxContainer" class="d-flex justify-content-center"></div>
+            <div class="d-grid mb-4 mt-4">
+                <button class="btn btn-custom btn-lg fw-bold" id="drawButton">
+                    ✨ DRAW THE NUMBER! ✨
+                </button>
+            </div>
+
+            <div class="token-list mt-4">
+                <h5 class="mb-3 text-secondary">Booking Tokens</h5>
+                <div id="tokenListContainer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+         document.addEventListener('DOMContentLoaded', () => {
+
+        const drawButton = document.getElementById('drawButton');
+        const tokenListContainer = document.getElementById('tokenListContainer');
+        const resultBoxContainer = document.getElementById('resultBoxContainer');
+        const DRAW_TIME_MS = 3000;
+
+        // Tokens from backend
+        const availableTokens = @Html.Raw(Json.Serialize(availableTokens));
+
+        // Determine max digits required
+        const maxToken = Math.max(...availableTokens);
+        const digits = String(maxToken).length;
+
+        let currentNumberDisplays = [];
+
+        // ===== Create Dynamic Result Boxes =====
+        function createResultBoxes() {
+            resultBoxContainer.innerHTML = '';
+            currentNumberDisplays = [];
+
+            for (let i = 0; i < digits; i++) {
+                const box = document.createElement('div');
+                box.className = 'result-box mx-1';
+
+                const span = document.createElement('span');
+                span.className = 'result-digit';
+                span.id = `currentNumber${i}`;
+                span.textContent = '-';
+
+                box.appendChild(span);
+                resultBoxContainer.appendChild(box);
+
+                currentNumberDisplays.push(span);
+            }
+        }
+        createResultBoxes();
+
+        // ===== Populate Token List =====
+        function populateTokenList() {
+            tokenListContainer.innerHTML = availableTokens.map(token => {
+                const t = String(token).padStart(digits, '0');
+                return `<span class="token-item mx-1 p-1 border" data-token="${t}">${t}</span>`;
+            }).join('');
+        }
+        populateTokenList();
+
+        // ===== Animation / Draw Logic =====
+        function runDraw() {
+            return new Promise(resolve => {
+
+                const interval = setInterval(() => {
+                    for (let i = 0; i < digits; i++) {
+                        currentNumberDisplays[i].textContent = Math.floor(Math.random() * 10);
+                    }
+                }, 50);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+
+                    const index = Math.floor(Math.random() * availableTokens.length);
+                    const winningNumber = String(availableTokens[index]).padStart(digits, '0');
+
+                    for (let i = 0; i < digits; i++) {
+                        currentNumberDisplays[i].textContent = winningNumber.charAt(i);
+                    }
+
+                    resolve(winningNumber);
+                }, DRAW_TIME_MS);
+            });
+        }
+
+        // ===== Draw Button =====
+        drawButton.addEventListener('click', async () => {
+            drawButton.disabled = true;
+            drawButton.textContent = 'Drawing...';
+
+            document.querySelectorAll('.token-item')
+                .forEach(x => x.classList.remove('winning-token', 'bg-success', 'text-white'));
+
+            const winning = await runDraw();
+
+            document.querySelectorAll(`.token-item[data-token="${winning}"]`)
+                .forEach(x => x.classList.add('winning-token', 'bg-success', 'text-white'));
+
+            drawButton.disabled = false;
+            drawButton.textContent = '🎉 DRAW AGAIN! 🎉';
+        });
+
+    });
+</script>

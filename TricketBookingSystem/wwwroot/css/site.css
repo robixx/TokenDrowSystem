@@ -1,0 +1,110 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.form-control {
+    border:1px solid #198754 !important;
+}
+
+/* Numbers Display Grid */
+.numbers-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 576px) {
+    .numbers-display {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 8px;
+    }
+}
+
+.number-box {
+    aspect-ratio: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: #ebf1ee;
+    color: var(--dark);
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+.number-box.booked {
+        background: #28a745; /* green */
+        color: white;
+        border-color: #1e7e34;
+    }
+
+.info-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ebf1ee;
+    border-radius: 8px;
+    border-left: 5px solid #198754;
+}
+
+
+
+
+
+.selected-list-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.selected-item {
+    padding: 8px 14px;
+    background: #198754;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: default;
+    font-size: 16px;
+    user-select: none;
+}
+
+.form-select:focus,
+.textarea.form-control:focus,
+.form-control:focus
+{
+    
+    box-shadow: #198754 !important; /* Blue glow */
+}
+
+.disabled {
+    background: #e3cfcf;
+    cursor: not-allowed;
+}
+
+
+@media (max-width: 576px) {
+    .number-box {
+        font-size: 1.2rem;
+    }
+}
