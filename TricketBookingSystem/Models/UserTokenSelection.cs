@@ -11,6 +11,8 @@ namespace TricketBookingSystem.Models
         public int UserId { get; set; }
         public int TricketId { get; set; }
         public int TokenNumber { get; set; }
+        public string? UserName { get; set; }
+        public string? MobileNumber { get; set; }
         public DateTime SelectedDate { get; set; }
     }
 }

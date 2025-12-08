@@ -48,9 +48,9 @@
     }
     
     .owned-ticket {
-        background-color: #198754;
+        background-color: #a95116;
         color: white;
-        border: 2px solid #198754;
+        border: 2px solid #a95116;
     }
    
     .other-ticket {
@@ -70,8 +70,8 @@
         </div><hr />
         <div class="row g-3 mt-2">
             <div class="col-6 col-md-6">
-                <p class="text-sm font-medium text-gray-500">Booking Date</p>
-                <p class="text-base font-semibold text-gray-900"><span data-lucide="Calendar"></span> @ViewBag.EventDate</p>
+                <p class="text-sm font-medium text-gray-500">Current Date</p>
+                <p class="text-base font-semibold text-gray-900"><span data-lucide="Calendar"></span> @DateTime.Now.ToString("dd-MMM-yyyy")</p>
             </div>
             <div class="col-6 col-md-6 text-end">
                 <p class="text-sm font-medium text-gray-500">Total Tickets Owned</p>

@@ -22,7 +22,7 @@
                 </button>
             </div>
 
-            <div class="token-list mt-4">
+            <div class="token-list mt-4 d-none">
                 <h5 class="mb-3 text-secondary">Booking Tokens</h5>
                 <div id="tokenListContainer">
                 </div>
@@ -95,7 +95,7 @@
 
                     const index = Math.floor(Math.random() * availableTokens.length);
                     const winningNumber = String(availableTokens[index]).padStart(digits, '0');
-
+                    availableTokens.splice(index, 1);
                     for (let i = 0; i < digits; i++) {
                         currentNumberDisplays[i].textContent = winningNumber.charAt(i);
                     }

@@ -9,7 +9,7 @@
 <link href="~/css/site.css" rel="stylesheet" />
 <style>
     .token-btn {
-        padding: 20px 32px;
+        padding: 20px 33px;
         border: 1px solid #999;
         background: #ecf9f0;
         border-radius: 6px;
@@ -175,7 +175,6 @@
     function updateSelectedTokens() {
         const container = document.getElementById("selectedList");
         container.innerHTML = "";
-
         clickedTokens.sort((a, b) => a - b).forEach(num => {
             const token = document.createElement("span");
             token.className = "token-btns selected-tokens";
@@ -189,22 +188,36 @@
     document.getElementById("confirmBooking")?.addEventListener("click", () => {
         const username = document.getElementById("username").value.trim();
         const mobile = document.getElementById("mobile").value.trim();
-         debugger;
+       
         if (!username || !mobile || clickedTokens.length === 0) {
             alert("Please enter name, mobile and select at least one token.");
             return;
         }
-        debugger;
+       
         const bookingData = {
-            name: username,
-            mobile: mobile,
-            tokens: clickedTokens.slice()
+            Name: username,
+            Mobile: mobile,
+            Tokens: clickedTokens.slice()
         };
-         debugger;
-        console.log("Booking Data:", bookingData);
+        console.log(JSON.stringify(bookingData));
+        debugger;
+       // --- AJAX CALL ---
+        $.ajax({
+            url: '/TokenBook/SaveToken',
+            type: 'POST',            
+            data: JSON.stringify(bookingData),
+            contentType: 'application/json',
+            success: function (response) {
+                alert(response.message);
+               window.location.reload();
+            },
 
-        // TODO: send bookingData to server via AJAX
-        alert(`Booking confirmed!\nName: ${username}\nMobile: ${mobile}\nTokens: ${bookingData.tokens.join(", ")}`);
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("Error: " + error);
+            }
+        });
+      
     });
 
 

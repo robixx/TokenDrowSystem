@@ -72,7 +72,7 @@ namespace TricketBookingSystem.Controllers
 
             // 2. Load user's purchased tickets
             var purchased = await _connection.UserTokenSelection
-                .Where(x => x.UserId == userId)
+                
                 .Select(x => x.TokenNumber)
                 .ToListAsync();
 
